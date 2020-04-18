@@ -12,8 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
-import com.example.jokedisplay.JokeDisplayActivity;
+import com.example.jokedisplaylibrary.JokeActivity;
 
 
 /**
@@ -32,7 +31,12 @@ public class MainActivityFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_main, container, false);
 
         Button button = root.findViewById(R.id.button_joke);
-        button.setOnClickListener(v -> getJoke());
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivityFragment.this.getJoke();
+            }
+        });
 
         mLoadingIndicator = root.findViewById(R.id.pb_loading_indicator);
         return root;
@@ -40,7 +44,7 @@ public class MainActivityFragment extends Fragment {
 
     //This method retrieves a joke string from AsyncTask and open activity
     public void getJoke() {
-        EndpointsAsyncTask.getInstance(new OnRetrieveJokeListener() {
+        EndpointsAsyncTask.getInstance(new OnJokeRetrieve() {
             @Override
             public void onRetrieveJokeStart() {
                 //Show progress bar
@@ -63,8 +67,8 @@ public class MainActivityFragment extends Fragment {
 
     // This method launches the joke display activity from Android library
     private void launchJokeDisplayActivity(@Nullable String result) {
-        final Intent intent = new Intent(getActivity(), JokeDisplayActivity.class);
-        intent.putExtra(JokeDisplayActivity.JOKE_EXTRA, result);
+        final Intent intent = new Intent(getActivity(), JokeActivity.class);
+        intent.putExtra(JokeActivity.JOKE_TAG, result);
         startActivity(intent);
     }
 
